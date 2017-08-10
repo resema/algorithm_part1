@@ -2,15 +2,19 @@
  *  Percolation data type
  */
 
-import edu.princeton.cs.algs4.*;
+import java.lang.*;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     
     private int size = 0;
-    private int top = 0;
+    private final int top = 0;
     private int bottom = 0;
     private boolean[][] opened;
     private WeightedQuickUnionUF qf;
+    private int num;
     
     private int getQFIndex(int row, int col) {
         return size * (row-1) + col;
@@ -18,14 +22,19 @@ public class Percolation {
     
     // create n-by-n grid with all sites blocked
     public Percolation (int n) {
-        size = n;
-        bottom = size * size + 1; // one after the last site
-        opened = new boolean[size][size];
-        qf = new WeightedQuickUnionUF(size*size + 2);  // imaginary top and bottom
+      if (n <= 0) throw new IllegalArgumentException();
+      
+      this.size = n;
+      this.bottom = size * size + 1; // one after the last site
+      this.opened = new boolean[size][size];
+      this.qf = new WeightedQuickUnionUF(size*size + 2);  // imaginary top and bottom
     }
     // open site (row, col) if it is not open already
     public void open (int row, int col) {
+        if (row < 1 || row > size || col < 1 || col > size) throw new IndexOutOfBoundsException();
+      
         opened[row-1][col-1] = true;
+        num++;
         
         if (row == 1) {
             qf.union(getQFIndex(row, col), top);
@@ -50,6 +59,8 @@ public class Percolation {
     }
     // is site (row, col) open?
     public boolean isOpen (int row, int col) {
+        if (row < 1 || row > size || col < 1 || col > size) throw new IndexOutOfBoundsException();
+
         return opened[row-1][col-1];
     }
     // is site (row, col) full?
@@ -63,14 +74,11 @@ public class Percolation {
     }
     // number of open sites
     public int numberOfOpenSites() {
-        return 0;
+        return num;
     }
     // does the system percolate?
     public boolean percolates() {
         return qf.connected(top, bottom);
     }
-    
-    public static void main (String[] args) {
         
-    }
 }
