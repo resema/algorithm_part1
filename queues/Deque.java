@@ -11,11 +11,11 @@
  *
  ******************************************************************************/
  
-import java.lang.*;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.lang.UnsupportedOperationException;
  
-public class Deque<Item> /*implements Iterable<Item>*/   {
+public class Deque<Item> implements Iterable<Item> {
 
   // nodes for linked list implementation
   @SuppressWarnings("hiding")
@@ -38,6 +38,27 @@ public class Deque<Item> /*implements Iterable<Item>*/   {
     
     public Item getValue() {
       return this.value;
+    }
+  }
+  
+  // Deque Iterator implements hasNext(), remove() and next()
+  private class DequeIterator implements Iterator<Item> {
+    private Node cur;
+    
+    public DequeIterator() {
+      this.cur = head;
+    }
+    public boolean hasNext() {
+      return (cur != null);
+    }
+    public void remove() { throw new UnsupportedOperationException(); }
+    public Item next() {
+      if (!this.hasNext()) { throw new NoSuchElementException(); }
+      else {
+       Node node = cur;
+       cur = cur.next;
+       return (Item)node.getValue();
+      }
     }
   }
   
@@ -115,24 +136,40 @@ public class Deque<Item> /*implements Iterable<Item>*/   {
   }
    
   // return an iterator over items in order from front to end
-  // public Iterator<Item> iterator() {
-    // // calling remove() throws java.ang.UnsupportedOperationException
-    // // calling next() at the end of the items throws java.util.NoSuchElementException
-    // return ...;
-  // }
+  public Iterator<Item> iterator() {
+    // calling remove() throws java.ang.UnsupportedOperationException
+    // calling next() at the end of the items throws java.util.NoSuchElementException
+    return new DequeIterator();
+  }
    
   // unit testing
   public static void main (String[] args) {
     Deque<Integer> d = new Deque<Integer>();
+    
+    StdOut.println("***********************************************");
     d.addFirst(1);
     d.addFirst(2);
     d.addLast(3);
     StdOut.println("Size = " + d.size());
     
-    // should be "2"
     StdOut.println("First element = " + d.removeFirst() + ", should be '2'");
     StdOut.println("Last element = " + d.removeLast() + ", should be '3'");
     StdOut.println("First element = " + d.removeFirst() + ", should be '1'");
+    
+    StdOut.println("***********************************************");
+    d.addFirst(3);
+    d.addFirst(2);
+    d.addLast(4);
+    d.addLast(5);
+    d.addFirst(1);
+    
+    Iterator it = d.iterator();
+    StdOut.println(it.next());
+    StdOut.println(it.next());
+    StdOut.println(it.next());
+    StdOut.println(it.next());
+    StdOut.println(it.next());
+    
   }
   
  }
