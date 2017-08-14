@@ -31,32 +31,46 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   private class RQIterator implements Iterator<Item> {
     private Item[] it;
     private int nbrItemsLeft;
+    private int length;
     
     public RQIterator() {
       it = (Item[])new Object[nbrOfItems];
       int j = 0;
       for (int i = 0; i < max; i++) {
-        if (j == nbrOfItems) { break; }
+         if (j == nbrOfItems) { break; }
         if (resizingArray[i] != null) {
           this.it[j++] = resizingArray[i];
         }
       }
+      this.nbrItemsLeft = nbrOfItems;
     }
     public boolean hasNext() { return this.nbrItemsLeft != 0; }
     public void remove() { throw new UnsupportedOperationException(); }
     public Item next() {
       if (!this.hasNext()) { throw new NoSuchElementException(); }
-      
-      int rand = 0;
-      do {
-        rand = StdRandom.uniform(this.it.length);
-      } while (it[rand] == null);
-      
-      Item item = it[rand];
-      it[rand] = null;
-      this.nbrItemsLeft--;
-      
-      return item;
+      else {
+        int rand = 0;
+        int cnt = 0;
+        do {
+          if (cnt > 1000000) { 
+            for (int i = 0; i < it.length; i++) {
+              StdOut.print(it[i] + ", ");
+            }
+            StdOut.println();      
+            StdOut.println("nbrItemsLeft = " + nbrItemsLeft);
+            cnt = 0;
+          }
+          cnt++;
+          
+          rand = StdRandom.uniform(0, it.length);
+        } while (it[rand] == null);
+        StdOut.print("at it = " + rand + " is element = " + it[rand] + ",\t");
+        
+        Item item = it[rand];
+        it[rand] = null;
+        this.nbrItemsLeft--;
+        return item;
+      }
     }
   }  
   
@@ -122,6 +136,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   private Item[] resizeArray(int newSz) {
     Item[] newArray = (Item[]) new Object[newSz];
     int oldSz = this.resizingArray.length;
+    this.max = newSz;
     
     int j = 0;
     for (int i = 0; i < oldSz; i++) {
@@ -143,14 +158,39 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   public static void main(String[] args) {
     StdOut.println("***********************************************");
     RandomizedQueue<Integer> randQ = new RandomizedQueue<Integer>();
-    randQ.enqueue(11);
-    randQ.enqueue(12);
-    randQ.enqueue(13);
-    randQ.enqueue(14);
-    randQ.enqueue(15); 
+    randQ.enqueue(0);
+    randQ.enqueue(1);
+    randQ.enqueue(2);
+    randQ.enqueue(3);
+    randQ.enqueue(4);
+    randQ.enqueue(5); 
+    randQ.enqueue(6);
+    randQ.enqueue(7);
+    randQ.enqueue(8);
+    randQ.enqueue(9);
+    randQ.enqueue(10);
     StdOut.println("nbrOfItems = " + randQ.size());
+    StdOut.println(randQ.dequeue());
+    // StdOut.println(randQ.dequeue());
+    // StdOut.println(randQ.dequeue());
+   
+    StdOut.println("***********************************************");
+    randQ.enqueue(21);
+    randQ.enqueue(22);
+    StdOut.println("Size it1 = " + randQ.size());
     
+    Iterator it1 = randQ.iterator();
+    Iterator it2 = randQ.iterator();
     
+    while (it1.hasNext()) {
+      StdOut.println("it1 = " + it1.next());
+    }
+    
+    StdOut.println("***********************************************");
+    StdOut.println("Size it2 = " + randQ.size());
+    while (it2.hasNext()) {
+      StdOut.println("it2 = " + it2.next());
+    }
   }
 }
  
