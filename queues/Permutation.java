@@ -1,15 +1,17 @@
 /******************************************************************************
  *  Compilation:  javac Permutation.java
-*  Execution:    java RandomizedQueue
+ *  Execution:    java Permutation
  *  Dependencies: algs4.jar
  *
- *  Similar to a stack or queue, except that the item removed is chosen uniformly
- *    at random fro items in the data structure.
+ *  Client program takes an integer k, reads in a sequence of string and prints
+ *    exactly k of them, uniformly at random
  *
  *  @author resema
  *
  ******************************************************************************/
 
-
-
-
+public class Permutation {
+  public static void main(String[] args) {
+    
+  }
+}
