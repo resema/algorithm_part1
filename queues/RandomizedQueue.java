@@ -1,7 +1,7 @@
 /******************************************************************************
  *  Compilation:  javac RandomizedQueue.java
- *  Execution:    N/A
- *  Dependencies: None
+ *  Execution:    java RandomizedQueue
+ *  Dependencies: algs4.jar
  *
  *  Similar to a stack or queue, except that the item removed is chosen uniformly
  *    at random fro items in the data structure.
@@ -24,14 +24,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
   // consturct an empty reandomized queue
   public RandomizedQueue() {
     this.nbrOfItems = 0;
-    this.max = QUEUEMAX;
+    this.max = RandomizedQueue.QUEUEMAX;
     this.resizingArray = (Item[])new Object[this.max];
   }
   
   private class RQIterator implements Iterator<Item> {
     private Item[] it;
     private int nbrItemsLeft;
-    private int length;
     
     public RQIterator() {
       it = (Item[])new Object[nbrOfItems];
@@ -41,7 +40,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (resizingArray[i] != null) {
           this.it[j++] = resizingArray[i];
         }
-      }
+      }      
       this.nbrItemsLeft = nbrOfItems;
     }
     public boolean hasNext() { return this.nbrItemsLeft != 0; }
@@ -52,19 +51,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         int rand = 0;
         int cnt = 0;
         do {
-          if (cnt > 1000000) { 
-            for (int i = 0; i < it.length; i++) {
-              StdOut.print(it[i] + ", ");
-            }
-            StdOut.println();      
-            StdOut.println("nbrItemsLeft = " + nbrItemsLeft);
-            cnt = 0;
-          }
-          cnt++;
-          
           rand = StdRandom.uniform(0, it.length);
         } while (it[rand] == null);
-        StdOut.print("at it = " + rand + " is element = " + it[rand] + ",\t");
         
         Item item = it[rand];
         it[rand] = null;
@@ -111,6 +99,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     
     if (this.fracOccupied() < 0.25) {
       this.max = this.max / 2;
+      this.resizingArray = this.resizeArray(this.max);
+    } else {
       this.resizingArray = this.resizeArray(this.max);
     }
     return toRemove;
@@ -171,25 +161,28 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     randQ.enqueue(10);
     StdOut.println("nbrOfItems = " + randQ.size());
     StdOut.println(randQ.dequeue());
-    // StdOut.println(randQ.dequeue());
-    // StdOut.println(randQ.dequeue());
+    StdOut.println(randQ.dequeue());
+    StdOut.println(randQ.dequeue());
+    StdOut.println(randQ.dequeue());
    
     StdOut.println("***********************************************");
     randQ.enqueue(21);
     randQ.enqueue(22);
-    StdOut.println("Size it1 = " + randQ.size());
+    randQ.enqueue(23);
+    randQ.enqueue(24);
+    StdOut.println("Size RandQ it1 = " + randQ.size());
     
     Iterator it1 = randQ.iterator();
     Iterator it2 = randQ.iterator();
     
     while (it1.hasNext()) {
-      StdOut.println("it1 = " + it1.next());
+      StdOut.println("item at it1 = " + it1.next());
     }
     
     StdOut.println("***********************************************");
-    StdOut.println("Size it2 = " + randQ.size());
+    StdOut.println("Size RandQ it2 = " + randQ.size());
     while (it2.hasNext()) {
-      StdOut.println("it2 = " + it2.next());
+      StdOut.println("item at it2 = " + it2.next());
     }
   }
 }
